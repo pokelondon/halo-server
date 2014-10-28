@@ -1,83 +1,18 @@
 .main {
   margin-top: 70px;
 }
-.Clue--beacon span {
-  background: #f6bb42;
+footer {
+  margin-top: 100px;
 }
-.Clue--complete span {
-  background: #434a54;
-}
-.Clue--geofence span {
-  background: #da4453;
-}
-.Clue--standard span {
-  background: #48cfad;
-}
-.StoryStep span,
-.Clue span {
-  text-transform: uppercase;
-  font-size: 10px;
-  display: inline-block;
-  padding: 4px 10px;
+a.btn-delete {
+  border-radius: 15px;
+  background: #ccc;
   color: #fff;
-  border-radius: 10px;
+  padding: 2px 5px 3px 4px;
+  font-size: 0.9em;
+  line-height: 1em;
 }
-.StoryStep .btn-delete,
-.Clue .btn-delete {
-  -webkit-transition: opacity 200ms;
-  transition: opacity 200ms;
-  /*opacity: 0;*/
-}
-.StoryStep:hover .btn-delete,
-.Clue:hover .btn-delete {
-  opacity: 1;
-}
-.ItemList {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  border-top: 1px solid #999;
-}
-.ItemList li {
-  width: 100%;
-  display: block;
-  list-style-type: none;
-  padding: 5px 0;
-  margin: 0;
-  clear: left;
-  border-bottom: 1px solid #ddd;
-  overflow: hidden;
-}
-.ItemList li:nth-child(odd) {
-  background: #f5f5f5;
-}
-.ItemList .field {
-  display: table-cell;
-  padding: 5px 5px;
-  float: left;
-}
-.ItemList .field--type {
-  width: 90px;
-}
-.ItemList .field--order {
-  font-weight: bold;
-}
-.ItemList .field--utils {
-  float: right;
-}
-.sortable {
-  cursor: move;
-}
-.sortable.over {
-  border: 1px dashed #999;
-  margin-top: -1px;
-}
-[draggable] {
-  -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-  /* Required to make elements draggable in old WebKit */
-  -khtml-user-drag: element;
-  -webkit-user-drag: element;
+a.btn-delete:hover {
+  background: #4fc1e9;
+  color: #fff;
 }

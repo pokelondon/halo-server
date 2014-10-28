@@ -18,7 +18,10 @@
   "dependencies": {
     "express": "^4.4.5",
     "jade": "^1.7.0",
+    "json-middleware": "^1.0.2",
     "mediator-js": "^0.9.8",
-    "source-map": "^0.1.40"
+    "multer": "^0.1.6",
+    "source-map": "^0.1.40",
+    "urlencode": "^0.2.0"
   }
 }
