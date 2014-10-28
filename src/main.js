@@ -54,9 +54,13 @@ app.get('/webhook/:type', function (req, res) {
 });
 
 app.get('/webhooks', function(req, res) {
-    var object_listss = redisClient.lrange('webhooks', 0, 199, function (err, reply) {
-        if (reply) {
-            res.render('webhooks', { object_list: JSON.parse('[' + reply.toString() + ']') });
+    var object_listss = redisClient.hgetall('webhooks', function (err, reply) {
+        var items = [];
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+        if (items.length) {
+            res.render('webhooks', { object_list: items });
         } else {
             res.render('webhooks', { object_list: []});
         }
@@ -65,7 +69,7 @@ app.get('/webhooks', function(req, res) {
 
 app.post('/webhooks', function(req, res) {
     var data = {label: req.body.label, id: randomHash()};
-    redisClient.lpush('webhooks', JSON.stringify(data));
+    redisClient.hset('webhooks', data.id, JSON.stringify(data));
     res.redirect('/webhooks');
 });
 
