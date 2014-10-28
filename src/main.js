@@ -16,9 +16,14 @@ var serverPort = (process.env.SOCKET_PORT || 8124);
 var mediator = new Mediator.Mediator();
 var app = express();
 
+// Setup
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'))
+
+// Persistent (ish) State
+var patternID = null;
+var clients = [];
 
 // Front End
 app.get('/', function (req, res) {
@@ -26,12 +31,13 @@ app.get('/', function (req, res) {
 });
 
 // API Endpoints
-app.get('/webhook', function (req, res) {
-    var data = {status: 'ok'};
-    mediator.publish('pattern', { id: 1 });
+app.get('/webhook/:id', function (req, res) {
+    console.log(req.params.id);
+    var data = {status: 'ok', data : { id: patternID }};
+    patternID = 1;
+    mediator.publish('pattern:change', req.params.id);
     res.json(data);
 });
-
 
 // Web server for UI and API Endpoints
 var webserver = app.listen(webServerPort, function () {
@@ -42,17 +48,30 @@ var webserver = app.listen(webServerPort, function () {
 
 // Socket Server for Processing Client
 var server = net.createServer(function(c) { //'connection' listener
-    mediator.subscribe('pattern', function(data){
-        console.log('Subscriber heard', data.id);
-        c.write('PATTERN: ' + data.id + '\r\n');
-    });
     console.log('Socket Server connected');
+    clients.push(c);
+
+    if(patternID){
+        c.write('PATTERN: ' + patternID + '\r\n');
+    }
+
     c.on('end', function() {
-        console.log('Socket Server disconnected');
-        mediator.remove('pattern');
+        // Remove referrence to this socket connection
+        var index = clients.indexOf(c);
+        if(index > -1) {
+            clients.splice(index, 1);
+        }
     });
-    c.write('Connected\r\n');
+
     c.pipe(c);
+});
+
+mediator.subscribe('pattern:change', function(data){
+    console.log("Sending to %d", clients.length);
+    clients.forEach(function(c) {
+        //c.write('PATTERN: ' + patternID + '\r\n');
+        c.write(data + '\r\n');
+    });
 });
 
 server.listen(serverPort, function() { //'listening' listener

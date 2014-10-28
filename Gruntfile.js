@@ -30,7 +30,7 @@ module.exports = function(grunt) {
                     "src/public/less/*/*.less"],
             tasks: ['less:development'],
             jade: {
-                files: ["src/templates/*.jade"],
+                files: ["src/views/*.jade"],
                 options: {
                     livereload: true,
                 }
