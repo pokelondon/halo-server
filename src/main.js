@@ -73,6 +73,11 @@ app.post('/webhooks', function(req, res) {
     res.redirect('/webhooks');
 });
 
+app.get('/webhooks/del/:id', function(req, res) {
+    redisClient.hdel('webhooks', req.params.id);
+    res.redirect('/webhooks');
+});
+
 // Web server for UI and API Endpoints
 var webserver = app.listen(webServerPort, function () {
     var host = webserver.address().address;
