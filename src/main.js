@@ -10,6 +10,7 @@ var Mediator = require('mediator-js');
 var redis = require('redis-client');
 var url = require('url');
 var bodyParser = require('body-parser');
+var crypto = require('crypto');
 
 // Configs
 var webServerPort = (process.env.WEB_PORT || 8080);
@@ -32,6 +33,13 @@ app.use(bodyParser.json({extended: true}));
 var patternType = null;
 var clients = [];
 
+// Utils
+function randomHash() {
+    var current_date = (new Date()).valueOf().toString();
+    var random = Math.random().toString();
+    return crypto.createHash('sha1').update(current_date + random).digest('hex');
+}
+
 // Front End
 app.get('/', function (req, res) {
     res.render('index', { title: 'Hey', message: 'Hello there!'});
@@ -46,19 +54,19 @@ app.get('/webhook/:type', function (req, res) {
 });
 
 app.get('/webhooks', function(req, res) {
-    var object_list = [{id: 'first', label: 'Poke Radio'}, {id: 'second', label: 'Something else'}];
-    var object_listss = redisClient.lrange('webhooks', -100, 199);
-    console.log(object_listss);
-    res.render('webhooks', { object_list: object_list });
+    var object_listss = redisClient.lrange('webhooks', 0, 199, function (err, reply) {
+        if (reply) {
+            res.render('webhooks', { object_list: JSON.parse('[' + reply.toString() + ']') });
+        } else {
+            res.render('webhooks', { object_list: []});
+        }
+    });
 });
 
 app.post('/webhooks', function(req, res) {
-    console.log(req.body);
-    var data = {label: req.params.label, id: "3k1123k412k3j4j123k4j123k4jf"};
+    var data = {label: req.body.label, id: randomHash()};
     redisClient.lpush('webhooks', JSON.stringify(data));
-
-    var object_list = [{id: 'first', label: 'Poke Radio'}, {id: 'second', label: 'Something else'}];
-    res.render('webhooks', { object_list: object_list });
+    res.redirect('/webhooks');
 });
 
 // Web server for UI and API Endpoints
