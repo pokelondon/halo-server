@@ -18,7 +18,7 @@
   "dependencies": {
     "express": "^4.4.5",
     "jade": "^1.7.0",
-    "redis": "^0.12.1",
+    "mediator-js": "^0.9.8",
     "source-map": "^0.1.40"
   }
 }
