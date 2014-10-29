@@ -11,7 +11,10 @@ var Mediator = require('mediator-js');
 var redis = require('redis-client');
 var url = require('url');
 var bodyParser = require('body-parser');
-var crypto = require('crypto');
+
+// Project imports
+var appData = require('./data');
+var utils = require('./utils');
 
 // Configs
 // ================================================================
@@ -38,13 +41,9 @@ app.use(bodyParser.json({extended: true}));
 var patternType = null;
 var clients = [];
 
-// Utils
+// Constant Data
 // ================================================================
-function randomHash() {
-    var current_date = (new Date()).valueOf().toString();
-    var random = Math.random().toString();
-    return crypto.createHash('sha1').update(current_date + random).digest('hex');
-}
+var UIKEY = 'qwyp98yq3l4h3w4tgsdfsdfg';
 
 // Front End
 // ================================================================
@@ -52,11 +51,9 @@ app.get('/', function (req, res) {
     res.render('index', { title: 'Hey', message: 'Hello there!'});
 });
 
-app.get('/webhook', function (req, res) {
-    var data = {status: 'ok', data : { id: patternType }};
-    patternType = 1;
-    mediator.publish('pattern:change', req.params.id);
-    res.json(data);
+// List Webhooks
+app.get('/webhooks', function (req, res) {
+    res.render('list', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
 });
 
 app.get('/keys', function(req, res) {
@@ -71,7 +68,7 @@ app.get('/keys', function(req, res) {
 });
 
 app.post('/keys', function(req, res) {
-    var data = {label: req.body.label, id: randomHash()};
+    var data = {label: req.body.label, id: utils.randomHash()};
     redisClient.hset('keys', data.id, JSON.stringify(data));
     res.redirect('/keys');
 });
@@ -83,11 +80,29 @@ app.get('/keys/del/:id', function(req, res) {
 
 // API Endpoints
 // ================================================================
-app.get('/webhook/:id/:type', function (req, res) {
-    var data = {status: 'ok', data : { id: patternType }};
-    patternType = 1;
-    mediator.publish('pattern:change', req.params.id);
-    res.json(data);
+app.get('/webhook/:key/:slug', function (req, res) {
+    if(UIKEY === req.params.key) {
+        res.redirect('/webhooks');
+        return;
+    }
+    redisClient.hget('keys', req.params.key, function (err, reply) {
+        // Check key
+        if(err || !reply) {
+            console.error('Key not found');
+            res.status(403).end();
+            return;
+        }
+
+        // Check webhook
+        patternType = appData.WEBHOOKS[req.params.slug];
+
+        // Publish
+        mediator.publish('pattern:change', 'TODO get text from payload');
+
+        // Respond
+        var data = {status: 'ok'};
+        res.json(data);
+    });
 });
 
 // Web server for UI and API Endpoints
@@ -105,7 +120,7 @@ var server = net.createServer(function(c) { //'connection' listener
     clients.push(c);
 
     if(patternType){
-        c.write('PATTERN: ' + patternType + '\r\n');
+        c.write('PATTERN: ' + patternType.slug + '\r\n');
     }
 
     c.on('end', function() {

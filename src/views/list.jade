@@ -1,0 +1,16 @@
+extends ./layout.jade
+block content
+  div.row
+    div.col-sm-6
+      h1!= title
+
+  div.row
+    div.col-md-10.col-md-offset-1
+      h2 Items
+      ul.list-group
+        each object in object_list
+          li.list-group-item
+            strong!= object.title + " - "
+            span!= object.description
+            a.btn.btn-xs.btn-info.pull-right(href=action + '/' + key + '/' + object.slug) Trigger it now
+
