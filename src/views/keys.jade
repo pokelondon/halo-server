@@ -6,17 +6,19 @@ block content
 
   div.row
     div.col-md-5.col-md-offset-1
-      form(role="form" method="POST" action="/webhooks")
+      h2 Create a key
+      form(role="form" method="POST" action=action)
         div.form-group
-        label(for="input-webhook-label") Label
-        input(type="text" name="label" id="input-webhook-label" class="form-control js-message")
+          label(for="input-webhook-label") Label
+          input(type="text" name="label" id="input-webhook-label" class="form-control js-message")
         button(type="submit" class="form-control btn btn-info") Submit
 
     div.col-md-5
+      h2 Existing keys
       ul.list-group
         each object in object_list
           li.list-group-item
             strong!= object.id + " - "
             span!= object.label
-            a.btn.btn-xs.btn-delete.pull-right(href="/webhooks/del/" + object.id) &times;
+            a.btn.btn-xs.btn-delete.pull-right(href!=action + "/del/" + object.id) &times;
 

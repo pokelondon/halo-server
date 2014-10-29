@@ -4,6 +4,7 @@
  */
 
 // Libs
+// ================================================================
 var express = require('express');
 var net = require('net');
 var Mediator = require('mediator-js');
@@ -13,16 +14,19 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 
 // Configs
+// ================================================================
 var webServerPort = (process.env.WEB_PORT || 8080);
 var serverPort = (process.env.SOCKET_PORT || 8124);
 var redisURL = url.parse(process.env.REDIS_URL || 'redis://localhost:6379/1');
 
 // Init
+// ================================================================
 var mediator = new Mediator.Mediator();
 var app = express();
 var redisClient = redis.createClient(redisURL.port, redisURL.hostname, {auth_pass: redisURL.password});
 
 // Setup
+// ================================================================
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
@@ -30,10 +34,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json({extended: true}));
 
 // Persistent (ish) State
+// ================================================================
 var patternType = null;
 var clients = [];
 
 // Utils
+// ================================================================
 function randomHash() {
     var current_date = (new Date()).valueOf().toString();
     var random = Math.random().toString();
@@ -41,44 +47,51 @@ function randomHash() {
 }
 
 // Front End
+// ================================================================
 app.get('/', function (req, res) {
     res.render('index', { title: 'Hey', message: 'Hello there!'});
 });
 
-// API Endpoints
-app.get('/webhook/:type', function (req, res) {
+app.get('/webhook', function (req, res) {
     var data = {status: 'ok', data : { id: patternType }};
     patternType = 1;
     mediator.publish('pattern:change', req.params.id);
     res.json(data);
 });
 
-app.get('/webhooks', function(req, res) {
-    var object_listss = redisClient.hgetall('webhooks', function (err, reply) {
+app.get('/keys', function(req, res) {
+    redisClient.hgetall('keys', function (err, reply) {
+        // Reply seems to be an itterable for hgetall
         var items = [];
         for (i in reply) {
            items.push(JSON.parse(reply[i]));
         }
-        if (items.length) {
-            res.render('webhooks', { object_list: items });
-        } else {
-            res.render('webhooks', { object_list: []});
-        }
+        res.render('keys', { object_list: items, action: '/keys' });
     });
 });
 
-app.post('/webhooks', function(req, res) {
+app.post('/keys', function(req, res) {
     var data = {label: req.body.label, id: randomHash()};
-    redisClient.hset('webhooks', data.id, JSON.stringify(data));
-    res.redirect('/webhooks');
+    redisClient.hset('keys', data.id, JSON.stringify(data));
+    res.redirect('/keys');
 });
 
-app.get('/webhooks/del/:id', function(req, res) {
-    redisClient.hdel('webhooks', req.params.id);
-    res.redirect('/webhooks');
+app.get('/keys/del/:id', function(req, res) {
+    redisClient.hdel('keys', req.params.id);
+    res.redirect('/keys');
+});
+
+// API Endpoints
+// ================================================================
+app.get('/webhook/:id/:type', function (req, res) {
+    var data = {status: 'ok', data : { id: patternType }};
+    patternType = 1;
+    mediator.publish('pattern:change', req.params.id);
+    res.json(data);
 });
 
 // Web server for UI and API Endpoints
+// ================================================================
 var webserver = app.listen(webServerPort, function () {
     var host = webserver.address().address;
     var port = webserver.address().port;
@@ -86,6 +99,7 @@ var webserver = app.listen(webServerPort, function () {
 });
 
 // Socket Server for Processing Client
+// ================================================================
 var server = net.createServer(function(c) { //'connection' listener
     console.log("Socket Server connected %d", clients.length);
     clients.push(c);
