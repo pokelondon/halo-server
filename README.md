@@ -10,7 +10,7 @@ This is the server that manages the state of the POKE Lights via webhooks.
 Clone the repo:
 
 ```
-$ git clone git://git@github.com/pokelights-server
+$ git clone git@github.com:pokelondon/halo-server.git
 $ cd pokelights-server
 ```
 ### Install requirements
