@@ -9,16 +9,8 @@ block content
       h2 Items
       ul.list-group
         each object in object_list
-          li.list-group-item.row
-            div.col-md-6
+          block item
+            li.list-group-item
               h3!= object.title
-              code!= action + '/{key}/' + object.slug
               p!= object.description
-            div.col-md-6
-              form(action=action + '/' + key + '/' + object.slug method="POST").form
-                each value, key in object.params
-                  div.form-group.form-group-inline
-                    label(for="input-webhook-label")!= key
-                    input(type="text" name=key id="input-" + key + "-label" value=value class="form-control")
-                input(type="submit" value="Test").btn.btn-xs.btn-info.pull-right
 

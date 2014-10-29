@@ -53,7 +53,7 @@ app.get('/', function (req, res) {
 
 // List Webhooks
 app.get('/webhooks', function (req, res) {
-    res.render('list', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
+    res.render('list_webhooks', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
 });
 
 app.get('/keys', function(req, res) {
