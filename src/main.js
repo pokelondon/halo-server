@@ -80,8 +80,20 @@ app.get('/keys/del/:id', function(req, res) {
 
 // API Endpoints
 // ================================================================
-app.get('/webhook/:key/:slug', function (req, res) {
+app.post('/webhook/:key/:slug', function (req, res) {
+    function process() {
+        // Check webhook
+        if(!appData.WEBHOOKS.hasOwnProperty(req.params.slug)) {
+            res.status(404).end();
+            return;
+        }
+        patternType = appData.WEBHOOKS[req.params.slug];
+
+        // Publish
+        mediator.publish('pattern:change', utils.processPayload(req.body, patternType));
+    }
     if(UIKEY === req.params.key) {
+        process();
         res.redirect('/webhooks');
         return;
     }
@@ -93,14 +105,10 @@ app.get('/webhook/:key/:slug', function (req, res) {
             return;
         }
 
-        // Check webhook
-        patternType = appData.WEBHOOKS[req.params.slug];
-
-        // Publish
-        mediator.publish('pattern:change', 'TODO get text from payload');
+        process();
 
         // Respond
-        var data = {status: 'ok'};
+        var data = {status: 'ok', patternType: patternType};
         res.json(data);
     });
 });
