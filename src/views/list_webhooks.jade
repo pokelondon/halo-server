@@ -8,10 +8,11 @@ block item
       p!= object.description
     div.col-md-6
       form(action=action + '/' + key + '/' + object.slug method="POST").form
-        each value, key in object.params
-          div.form-group.form-group-inline
-            label(for="input-webhook-label")!= key
-            input(type="text" name=key id="input-" + key + "-label" value=value class="form-control")
+        if object.params
+          each value, key in object.params
+            div.form-group.form-group-inline
+              label(for="input-webhook-label")!= key
+              input(type="text" name=key id="input-" + key + "-label" value=value class="form-control")
         input(type="submit" value="Test").btn.btn-xs.btn-info.pull-right
 
 

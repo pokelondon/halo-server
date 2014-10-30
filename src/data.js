@@ -11,6 +11,11 @@ var WEBHOOKS = {
         description: 'Flash a set of colours',
         params: {colour: '120,120,120', interval: 1}
     },
+    'equaliser': {
+        slug: 'equaliser',
+        title: 'Graphic Equaliser',
+        description: 'Lights move in time with the music on PokeRadio',
+    },
 };
 
 module.exports.WEBHOOKS = WEBHOOKS;

@@ -13,7 +13,10 @@ function randomHash() {
 // Run this with an item from appData.WEBHOOKS
 // To create the payload that gets sent to Processing
 function processPayload(body, webhook) {
-    var payload = [];
+    var payload = [webhook.slug];
+    if(!webhook.hasOwnProperty('params')) {
+        return webhook.slug;
+    }
     for (key in webhook.params) {
         if(body.hasOwnProperty(key)) {
             payload.push(key + ':' + body[key]);
