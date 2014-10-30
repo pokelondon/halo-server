@@ -11,7 +11,7 @@ Clone the repo:
 
 ```
 $ git clone git@github.com:pokelondon/halo-server.git
-$ cd pokelights-server
+$ cd halo-server
 ```
 ### Install requirements
 ```
@@ -26,7 +26,7 @@ $ brew install redis-server
 You may wish to use different ports or Redis server. If so, copy and source the example `.env` file
 
 ```
-$ mv example.env && vim .env # edit it
+$ mv example.env .env && vim .env # edit it
 $ source .env
 ```
 There are 2 processes, the main Node JS process...
