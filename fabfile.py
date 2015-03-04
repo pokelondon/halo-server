@@ -1,0 +1,72 @@
+import os
+from fabric.api import env
+from fabric.state import output
+
+from velcro.env import bootstrap as _bootstrap
+from velcro.decorators import pre_hooks, post_hooks
+from velcro.http.nginx import (restart_nginx, reload_nginx, stop_nginx,
+                               start_nginx)
+from velcro.service.supervisord import list_programs, start, stop, restart
+from velcro.scm.git import deploy as _deploy
+from velcro.target import live, stage
+
+# Silence Output
+output['running'] = False
+
+# Project Details
+env.client = 'poke'
+env.project = 'pokelondon'
+
+env.local_path = os.path.abspath(os.path.dirname(__file__))
+
+# Paths & Directories
+env.root_path = '/poke/data/www/'
+env.directories = {
+    'static': None, 'logs': None, 'src': None,
+}
+
+# Users
+env.user = 'poke'
+env.sudo_user = 'root'
+
+# Version Control
+env.scm = 'git'
+
+# Hosts to deploy too
+env.hosts = [
+    'smoochum.pokedev.net'
+]
+
+# Config path
+env.config_path_pipeline = [
+    'src',
+    '{package_name}',
+    '{config_dir}',
+    '{target}',
+]
+
+# HTTP Server
+env.http_server_conf_path = '/poke/data/conf/nginx/'
+env.nginx_conf = 'nginx.conf'
+
+# Supervisord Configs
+env.supervisord_config_dir = '/poke/data/conf/supervisord/'
+env.supervisord_configs = [
+    'supervisord.conf',
+]
+
+@post_hooks(
+    'velcro.http.nginx.symlink',
+    'velcro.service.supervisord.symlink',
+)
+def bootstrap():
+    _bootstrap()
+
+
+@post_hooks(
+    'velcro.scm.git.clean',
+    'velcro.service.supervisord.symlink',
+    'service.supervisord.reread',
+)
+def deploy(branch, **kwargs):
+    _deploy(branch)
