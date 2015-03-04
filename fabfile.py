@@ -1,6 +1,7 @@
 import os
-from fabric.api import env
+from fabric.api import env, run
 from fabric.state import output
+from fabric.context_managers import cd
 
 from velcro.env import bootstrap as _bootstrap
 from velcro.decorators import pre_hooks, post_hooks
@@ -15,7 +16,7 @@ output['running'] = False
 
 # Project Details
 env.client = 'poke'
-env.project = 'pokelondon'
+env.project = 'halo'
 
 env.local_path = os.path.abspath(os.path.dirname(__file__))
 
@@ -34,7 +35,7 @@ env.scm = 'git'
 
 # Hosts to deploy too
 env.hosts = [
-    'smoochum.pokedev.net'
+    'bidoof.pokedev.net'
 ]
 
 # Config path
@@ -70,3 +71,9 @@ def bootstrap():
 )
 def deploy(branch, **kwargs):
     _deploy(branch)
+
+
+def install():
+    src = os.path.join(env.base_path, 'src')
+    with cd(src):
+        run('npm install')
