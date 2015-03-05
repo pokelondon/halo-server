@@ -13,7 +13,8 @@
     "grunt-contrib-connect": "^0.8.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+    "redis-client": "^0.3.5"
   },
   "dependencies": {
     "express": "^4.4.5",
