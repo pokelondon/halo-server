@@ -1,5 +1,6 @@
 # Poke Lights Server
 This is the server that manages the state of the POKE Lights via webhooks.
+http://bidoof.pokedev.net:8080/
 
 ## Requirements
 - Node JS
