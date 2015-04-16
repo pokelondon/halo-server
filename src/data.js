@@ -40,6 +40,11 @@ var WEBHOOKS = {
         description: 'Show details for the track POKE Radio is now playing',
         params: {title: 'The Sound of Silence', artist: 'Simon and Garfunkel'}
     },
+    'bell': {
+        slug: 'bell',
+        title: 'Bell',
+        description: 'Display special bell animation'
+    },
 };
 
 module.exports.WEBHOOKS = WEBHOOKS;
