@@ -9,7 +9,7 @@ var WEBHOOKS = {
         slug: 'flash',
         title: 'Flash',
         description: 'Flash a set of colours',
-        params: {colour: '120,120,120', interval: 1}
+        params: {colour: '120,254,120', count: 1}
     },
     'equaliser': {
         slug: 'equaliser',
