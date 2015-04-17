@@ -1,25 +1,25 @@
 var WEBHOOKS = {
+    'lava-lamp': {
+        slug: 'lava-lamp',
+        title: 'Lava Lamp',
+        description: 'Classic 60s aesthetic'
+    },
+    'equaliser': {
+        slug: 'equaliser',
+        title: 'Graphic Equaliser',
+        description: 'Lights move in time with the music on PokeRadio',
+    },
     'text': {
         slug: 'text',
         title: 'Text',
         description: 'Send a string of text to be displayed',
         params: {colour: '120,120,120', text: ''}
     },
-    'lava-lamp': {
-        slug: 'lava-lamp',
-        title: 'Lava Lamp',
-        description: 'Classic 60s aesthetic'
-    },
     'flash': {
         slug: 'flash',
         title: 'Flash',
         description: 'Flash a set of colours',
         params: {colour: '120,254,120', count: 1}
-    },
-    'equaliser': {
-        slug: 'equaliser',
-        title: 'Graphic Equaliser',
-        description: 'Lights move in time with the music on PokeRadio',
     },
     'track-yay': {
         slug: 'track-yay',
