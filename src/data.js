@@ -50,6 +50,16 @@ var WEBHOOKS = {
         title: 'Bell',
         description: 'Display special bell animation'
     },
+    'rain': {
+        slug: 'rain',
+        title: 'It\'s raining!',
+        description: 'Display raining animation'
+    },
+    'sunrise': {
+        slug: 'sunrise',
+        title: 'It\'s sunrising!',
+        description: 'Display sunrising animation'
+    },
 };
 
 module.exports.WEBHOOKS = WEBHOOKS;

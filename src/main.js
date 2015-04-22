@@ -32,7 +32,7 @@ var redisClient = redis.createClient(redisURL.port, redisURL.hostname, {auth_pas
 // ================================================================
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
-app.use(express.static(__dirname + '/public'));
+app.use('/s/', express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json({extended: true}));
 
@@ -54,6 +54,11 @@ app.get('/', function (req, res) {
 // List Webhooks
 app.get('/webhooks', function (req, res) {
     res.render('list_webhooks', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
+});
+
+// JSON Endpoints for client apps
+app.get('/api/webhooks', function (req, res) {
+    res.json(appData.WEBHOOKS);
 });
 
 app.get('/keys', function(req, res) {
