@@ -18,7 +18,7 @@ var utils = require('./utils');
 
 // Configs
 // ================================================================
-var bind = (process.env.UNIX_SOCKET || 8080);
+var bind = (process.env.WEBSERVER_PORT || 8080);
 var serverPort = (process.env.SOCKET_PORT || 8124);
 var redisURL = url.parse(process.env.REDIS_URL || 'redis://localhost:6379/1');
 
