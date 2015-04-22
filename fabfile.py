@@ -67,6 +67,7 @@ def bootstrap():
 @post_hooks(
     'velcro.scm.git.clean',
     'velcro.service.supervisord.symlink',
+    'velcro.http.nginx.symlink',
     'service.supervisord.reread',
 )
 def deploy(branch, **kwargs):

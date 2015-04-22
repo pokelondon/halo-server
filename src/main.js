@@ -18,7 +18,7 @@ var utils = require('./utils');
 
 // Configs
 // ================================================================
-var webServerPort = (process.env.WEB_PORT || 8080);
+var bind = (process.env.UNIX_SOCKET || 8080);
 var serverPort = (process.env.SOCKET_PORT || 8124);
 var redisURL = url.parse(process.env.REDIS_URL || 'redis://localhost:6379/1');
 
@@ -48,7 +48,7 @@ var UIKEY = 'qwyp98yq3l4h3w4tgsdfsdfg';
 // Front End
 // ================================================================
 app.get('/', function (req, res) {
-    res.render('index', { title: 'Hey', message: 'Hello there!'});
+    res.redirect('/webhooks');
 });
 
 // List Webhooks
@@ -115,7 +115,7 @@ app.post('/webhook/:key/:slug', function (req, res) {
 
 // Web server for UI and API Endpoints
 // ================================================================
-var webserver = app.listen(webServerPort, function () {
+var webserver = app.listen(bind, function () {
     var host = webserver.address().address;
     var port = webserver.address().port;
     console.log('Web Server listening at http://%s:%s', host, port);
