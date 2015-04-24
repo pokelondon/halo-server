@@ -13,7 +13,7 @@ var WEBHOOKS = {
         slug: 'text',
         title: 'Text',
         description: 'Send a string of text to be displayed',
-        params: {colour: '120,120,120', text: ''}
+        params: {colour: '', text: ''}
     },
     'flash': {
         slug: 'flash',
