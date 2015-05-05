@@ -11,6 +11,7 @@ var Mediator = require('mediator-js');
 var redis = require('redis-client');
 var url = require('url');
 var bodyParser = require('body-parser');
+var basicAuth = require('basic-auth');
 
 // Project imports
 var appData = require('./data');
@@ -45,6 +46,26 @@ var clients = [];
 // ================================================================
 var UIKEY = 'qwyp98yq3l4h3w4tgsdfsdfg';
 
+//Auth method
+var auth = function (req, res, next) {
+    function unauthorized(res) {
+        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+        return res.send(401);
+    };
+
+    var user = basicAuth(req);
+
+    if (!user || !user.name || !user.pass) {
+        return unauthorized(res);
+    };
+
+    if (user.name === 'poke' && user.pass === 'Lam2fiT6') {
+        return next();
+    } else {
+        return unauthorized(res);
+    };
+};
+
 // Front End
 // ================================================================
 app.get('/', function (req, res) {
@@ -52,7 +73,7 @@ app.get('/', function (req, res) {
 });
 
 // List Webhooks
-app.get('/webhooks', function (req, res) {
+app.get('/webhooks', auth, function (req, res) {
     res.render('list_webhooks', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
 });
 
