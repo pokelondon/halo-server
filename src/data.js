@@ -4,6 +4,11 @@ var WEBHOOKS = {
         title: 'Lava Lamp',
         description: 'Classic 60s aesthetic'
     },
+    'stripes': {
+        slug: 'stripes',
+        title: 'Gradient stripes',
+        description: 'Stripey'
+    },
     'equaliser': {
         slug: 'equaliser',
         title: 'Graphic Equaliser',
