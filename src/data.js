@@ -65,6 +65,11 @@ var WEBHOOKS = {
         title: 'It\'s sunrising!',
         description: 'Display sunrising animation'
     },
+    'sunset': {
+        slug: 'sunset',
+        title: 'It\'s sunsetting!',
+        description: 'Display sunset animation'
+    }
 };
 
 module.exports.WEBHOOKS = WEBHOOKS;
