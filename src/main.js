@@ -118,7 +118,7 @@ app.get('/keys/del/:id', function(req, res) {
 });
 
 //scheduler
-app.get('/schedule', function(req, res) {
+app.get('/schedule', auth, function(req, res) {
     redisClient.hgetall('schedule', function (err, reply) {
         // Reply seems to be an itterable for hgetall
         var items = [];
