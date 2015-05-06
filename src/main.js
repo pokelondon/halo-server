@@ -45,6 +45,7 @@ var clients = [];
 // Constant Data
 // ================================================================
 var UIKEY = 'qwyp98yq3l4h3w4tgsdfsdfg';
+var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
 //Auth method
 var auth = function (req, res, next) {
@@ -82,6 +83,18 @@ app.get('/api/webhooks', function (req, res) {
     res.json(appData.WEBHOOKS);
 });
 
+app.get('/api/schedule', function (req, res) {
+    redisClient.hgetall('schedule', function (err, reply) {
+        // Reply seems to be an itterable for hgetall
+        var items = [];
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+
+        res.json(items);
+    });
+});
+
 app.get('/keys', function(req, res) {
     redisClient.hgetall('keys', function (err, reply) {
         // Reply seems to be an itterable for hgetall
@@ -102,6 +115,31 @@ app.post('/keys', function(req, res) {
 app.get('/keys/del/:id', function(req, res) {
     redisClient.hdel('keys', req.params.id);
     res.redirect('/keys');
+});
+
+//scheduler
+app.get('/schedule', function(req, res) {
+    redisClient.hgetall('schedule', function (err, reply) {
+        // Reply seems to be an itterable for hgetall
+        var items = [];
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+
+        res.render('schedule', { days: days, schedule: items, action: '/schedule' });
+    });
+});
+
+app.post('/schedule', function(req, res) {
+    var day_str = days[parseInt(req.body.day) - 1];
+    var data = {id: req.body.day, day: day_str, start: req.body.start, end: req.body.end};
+    redisClient.hset('schedule', day_str, JSON.stringify(data));
+    res.redirect('/schedule');
+});
+
+app.get('/schedule/del/:day', function(req, res) {
+    redisClient.hdel('schedule', req.params.day);
+    res.redirect('/schedule');
 });
 
 // API Endpoints
