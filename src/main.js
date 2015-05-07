@@ -91,7 +91,9 @@ app.get('/api/schedule', function (req, res) {
            items.push(JSON.parse(reply[i]));
         }
 
-        res.json(items);
+        var result = {};
+        result['schedule'] = items;
+        res.json(result);
     });
 });
 
@@ -193,6 +195,8 @@ var server = net.createServer(function(c) { //'connection' listener
 
     if(patternType){
         c.write('PATTERN: ' + patternType.slug + '\r\n');
+    }else{
+        c.write('MESSAGE: connected' + '\r\n');
     }
 
     c.on('end', function() {
