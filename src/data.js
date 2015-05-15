@@ -55,6 +55,11 @@ var WEBHOOKS = {
         title: 'Bell',
         description: 'Display special bell animation'
     },
+    'spot': {
+        slug: 'spot',
+        title: 'Spot',
+        description: 'Display spot animation'
+    },
     'rain': {
         slug: 'rain',
         title: 'It\'s raining!',
