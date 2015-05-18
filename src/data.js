@@ -4,6 +4,11 @@ var WEBHOOKS = {
         title: 'Lava Lamp',
         description: 'Classic 60s aesthetic'
     },
+    'stripes': {
+        slug: 'stripes',
+        title: 'Gradient stripes',
+        description: 'Stripey'
+    },
     'equaliser': {
         slug: 'equaliser',
         title: 'Graphic Equaliser',
@@ -13,7 +18,7 @@ var WEBHOOKS = {
         slug: 'text',
         title: 'Text',
         description: 'Send a string of text to be displayed',
-        params: {colour: '120,120,120', text: ''}
+        params: {colour: '', text: ''}
     },
     'flash': {
         slug: 'flash',
@@ -50,6 +55,11 @@ var WEBHOOKS = {
         title: 'Bell',
         description: 'Display special bell animation'
     },
+    'spot': {
+        slug: 'spot',
+        title: 'Spot',
+        description: 'Display spot animation'
+    },
     'rain': {
         slug: 'rain',
         title: 'It\'s raining!',
@@ -60,6 +70,11 @@ var WEBHOOKS = {
         title: 'It\'s sunrising!',
         description: 'Display sunrising animation'
     },
+    'sunset': {
+        slug: 'sunset',
+        title: 'It\'s sunsetting!',
+        description: 'Display sunset animation'
+    }
 };
 
 module.exports.WEBHOOKS = WEBHOOKS;

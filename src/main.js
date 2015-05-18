@@ -11,6 +11,7 @@ var Mediator = require('mediator-js');
 var redis = require('redis-client');
 var url = require('url');
 var bodyParser = require('body-parser');
+var basicAuth = require('basic-auth');
 
 // Project imports
 var appData = require('./data');
@@ -44,6 +45,27 @@ var clients = [];
 // Constant Data
 // ================================================================
 var UIKEY = 'qwyp98yq3l4h3w4tgsdfsdfg';
+var days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+//Auth method
+var auth = function (req, res, next) {
+    function unauthorized(res) {
+        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+        return res.send(401);
+    };
+
+    var user = basicAuth(req);
+
+    if (!user || !user.name || !user.pass) {
+        return unauthorized(res);
+    };
+
+    if (user.name === 'poke' && user.pass === 'Lam2fiT6') {
+        return next();
+    } else {
+        return unauthorized(res);
+    };
+};
 
 // Front End
 // ================================================================
@@ -52,13 +74,27 @@ app.get('/', function (req, res) {
 });
 
 // List Webhooks
-app.get('/webhooks', function (req, res) {
+app.get('/webhooks', auth, function (req, res) {
     res.render('list_webhooks', { object_list: appData.WEBHOOKS, action: '/webhook', title: 'Webhooks', key: UIKEY });
 });
 
 // JSON Endpoints for client apps
 app.get('/api/webhooks', function (req, res) {
     res.json(appData.WEBHOOKS);
+});
+
+app.get('/api/schedule', function (req, res) {
+    redisClient.hgetall('schedule', function (err, reply) {
+        // Reply seems to be an itterable for hgetall
+        var items = [];
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+
+        var result = {};
+        result['schedule'] = items;
+        res.json(result);
+    });
 });
 
 app.get('/keys', function(req, res) {
@@ -81,6 +117,31 @@ app.post('/keys', function(req, res) {
 app.get('/keys/del/:id', function(req, res) {
     redisClient.hdel('keys', req.params.id);
     res.redirect('/keys');
+});
+
+//scheduler
+app.get('/schedule', auth, function(req, res) {
+    redisClient.hgetall('schedule', function (err, reply) {
+        // Reply seems to be an itterable for hgetall
+        var items = [];
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+
+        res.render('schedule', { days: days, schedule: items, action: '/schedule' });
+    });
+});
+
+app.post('/schedule', function(req, res) {
+    var day_str = days[parseInt(req.body.day) - 1];
+    var data = {id: req.body.day, day: day_str, start: req.body.start, end: req.body.end};
+    redisClient.hset('schedule', day_str, JSON.stringify(data));
+    res.redirect('/schedule');
+});
+
+app.get('/schedule/del/:day', function(req, res) {
+    redisClient.hdel('schedule', req.params.day);
+    res.redirect('/schedule');
 });
 
 // API Endpoints
@@ -173,6 +234,8 @@ var server = net.createServer(function(c) { //'connection' listener
 
     if(patternType){
         c.write('PATTERN: ' + patternType.slug + '\r\n');
+    }else{
+        c.write('MESSAGE: connected' + '\r\n');
     }
 
     c.on('end', function() {

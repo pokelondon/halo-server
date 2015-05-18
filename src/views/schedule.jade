@@ -1,0 +1,30 @@
+extends ./layout.jade
+block content
+  div.row
+    div.col-sm-6
+      h1 Schedule
+
+  div.row
+    div.col-md-5.col-md-offset-1
+      h2 Create a new schedule entry
+      form(role="form" method="POST" action=action)
+        div.form-group
+          label(for="day") Day
+          select(id="day", name="day", class="form-control js-message")
+            each day, i in days
+              option(value="#{i + 1}") #{day}
+          label(for="start") Start time (hhmm)
+          input(type="text" name="start" id="start" class="form-control js-message")
+          label(for="end") End time (hhmm)
+          input(type="text" name="end" id="end" class="form-control js-message")
+        button(type="submit" class="form-control btn btn-info") Submit
+
+    div.col-md-5
+      h2 Existing schedule
+      ul.list-group
+        each item in schedule
+          li.list-group-item
+            strong!= item.day + " - "
+            span!= item.start + " - " + item.end
+            a.btn.btn-xs.btn-delete.pull-right(href!=action + "/del/" + item.day) &times;
+
