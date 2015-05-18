@@ -118,6 +118,45 @@ app.post('/webhook/:key/:slug', function (req, res) {
     });
 });
 
+app.post('/slack', function(req, res) {
+
+    var command = req.body.command;
+    var text = req.body.text.trim();
+
+    if('/halotext' === command) {
+        mediator.publish(
+            'pattern:change',
+            utils.processPayload({colour: '255,255,255', text: text},
+            appData.WEBHOOKS['text']));
+
+        res.send('Got it, ' + text).end();
+        return;
+
+    // Param less patterns
+    } else if('/halo' === command) {
+
+        if(!appData.WEBHOOKS.hasOwnProperty(text)) {
+            res.send('Couldn\'t find ' + text).end();
+            return;
+        }
+
+        var patternType = appData.WEBHOOKS[text];
+        // Pattern doesnt require extra params
+        if(!patternType.hasOwnProperty('params')) {
+            mediator.publish(
+                'pattern:change',
+                utils.processPayload({},
+                appData.WEBHOOKS[text]));
+
+            res.send(patternType.description);
+            return;
+        }
+        res.send('Couldn\'t find ' + text).end();
+    }
+    res.status(404).end();
+
+});
+
 // Web server for UI and API Endpoints
 // ================================================================
 var webserver = app.listen(bind, function () {
