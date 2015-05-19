@@ -14,6 +14,11 @@ var WEBHOOKS = {
         title: 'Graphic Equaliser',
         description: 'Lights move in time with the music on PokeRadio',
     },
+    'catchup': {
+        slug: 'catchup',
+        title: 'Time for catch up!',
+        description: 'Triggers a beer animation as the base pattern',
+    },
     'text': {
         slug: 'text',
         title: 'Text',
