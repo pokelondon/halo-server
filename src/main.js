@@ -144,6 +144,17 @@ app.get('/schedule/del/:day', function(req, res) {
     res.redirect('/schedule');
 });
 
+app.get('/slack', function(req, res) {
+    redisClient.lrange('slack', 0, 10, function (err, reply) {
+        var items = [];
+        var i;
+        for (i in reply) {
+           items.push(JSON.parse(reply[i]));
+        }
+        res.render('slack', {object_list: items, title: 'Messages'});
+    });
+});
+
 // API Endpoints
 // ================================================================
 app.post('/webhook/:key/:slug', function (req, res) {
@@ -183,6 +194,12 @@ app.post('/slack', function(req, res) {
 
     var command = req.body.command;
     var text = req.body.text.trim();
+    function logit() {
+        var data = req.body;
+        data.timestamp = new Date();
+
+        redisClient.lpush('slack', JSON.stringify(data));
+    }
 
     if('/halotext' === command) {
         mediator.publish(
@@ -190,6 +207,7 @@ app.post('/slack', function(req, res) {
             utils.processPayload({colour: '255,255,255', text: text},
             appData.WEBHOOKS['text']));
 
+        logit();
         res.send('Got it, ' + text).end();
         return;
 
@@ -210,6 +228,7 @@ app.post('/slack', function(req, res) {
                 appData.WEBHOOKS[text]));
 
             res.send(patternType.description);
+            logit();
             return;
         }
         res.send('Couldn\'t find ' + text).end();

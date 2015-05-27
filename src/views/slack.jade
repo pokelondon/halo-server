@@ -1,0 +1,17 @@
+extends ./layout.jade
+block content
+  div.row
+    div.col-sm-6
+      h1!= title
+
+  div.row
+    div.col-md-10.col-md-offset-1
+      h2 Items
+      ul.list-group
+        each object in object_list
+          block item
+            li.list-group-item
+              h3!= object.command
+              small!= object.timestamp
+              p!= object.text
+              p!= object.user_name
