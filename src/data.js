@@ -79,6 +79,11 @@ var WEBHOOKS = {
         slug: 'sunset',
         title: 'It\'s sunsetting!',
         description: 'Display sunset animation'
+    },
+    'fire': {
+        slug: 'fire',
+        title: 'FIREE!!! – Or almost certainly some sort of safety test',
+        description: 'Burn the house down'
     }
 };
 
