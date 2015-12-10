@@ -84,6 +84,11 @@ var WEBHOOKS = {
         slug: 'fire',
         title: 'FIREE!!! – Or almost certainly some sort of safety test',
         description: 'Burn the house down'
+    },
+    'snow': {
+        slug: 'snow',
+        title: 'Pretty sure it aint snowing. Whatever.',
+        description: 'It\'s Snowing!'
     }
 };
 
