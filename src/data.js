@@ -89,7 +89,7 @@ var WEBHOOKS = {
         slug: 'snow',
         title: 'Pretty sure it aint snowing. Whatever.',
         description: 'It\'s Snowing!'
-    }
+    },
     'goal': {
         slug: 'goal',
         title: 'Euro 2016 - the rich ball kickers kicked the ball in the net',
