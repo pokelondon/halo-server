@@ -94,7 +94,7 @@ var WEBHOOKS = {
         slug: 'goal',
         title: 'Euro 2016 - the rich ball kickers kicked the ball in the net',
         description: 'Ball kicking',
-        params: {score: '0-0', team_1: 'ENG', team_2: 'ESP'}
+        params: {score: '', team_1: '', team_2: ''}
     }
 };
 
